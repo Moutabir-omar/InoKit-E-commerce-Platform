@@ -3,6 +3,88 @@
 [![License](https://img.shields.io/badge/License-Custom-blue.svg)](LICENSE)
 [![Django](https://img.shields.io/badge/Django-4.2-green.svg)](https://www.djangoproject.com/)
 [![Bootstrap](https://img.shields.io/badge/Bootstrap-5.1-purple.svg)](https://getbootstrap.com/)
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://www.docker.com/)
+
+## 🐳 Docker Installation (Recommended)
+
+### For Windows Users (Using WSL2)
+1. Install WSL2 and Ubuntu:
+```powershell
+# Open PowerShell as Administrator and run:
+wsl --install
+# Restart your computer when prompted
+```
+
+2. Install Docker Desktop for Windows:
+- Download from [Docker Hub](https://hub.docker.com/editions/community/docker-ce-desktop-windows)
+- Install Docker Desktop
+- During installation, ensure WSL2 backend is selected
+- Start Docker Desktop and ensure WSL2 integration is enabled in Settings
+
+3. Clone and Run in WSL2:
+```bash
+# Open Ubuntu terminal (WSL2) and run:
+git clone https://github.com/Moutabir-omar/InoKit-E-commerce-Platform.git
+cd InoKit-E-commerce-Platform
+docker-compose up --build
+```
+
+### For Linux/Mac Users
+```bash
+# Install Docker and Docker Compose
+# For Ubuntu/Debian:
+sudo apt update
+sudo apt install docker.io docker-compose
+
+# For Mac (using Homebrew):
+brew install docker docker-compose
+
+# Clone and run the application
+git clone https://github.com/Moutabir-omar/InoKit-E-commerce-Platform.git
+cd InoKit-E-commerce-Platform
+docker-compose up --build
+```
+
+### Post-Installation Setup (All Platforms)
+In a new terminal:
+```bash
+# Run database migrations
+docker-compose exec web python manage.py migrate
+
+# Create admin user
+docker-compose exec web python manage.py createsuperuser
+
+# Access the application:
+# Main site: http://localhost:8000
+# Admin panel: http://localhost:8000/admin
+```
+
+### Docker Configuration Details
+The project uses Docker Compose with two services:
+
+1. Web Application (Django)
+```yaml
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      - DEBUG=1
+      - DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1
+```
+
+2. Database (PostgreSQL)
+```yaml
+  db:
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=inokit
+      - POSTGRES_USER=inokit_user
+      - POSTGRES_PASSWORD=inokit_password
+```
 
 ## 🚀 About InoKit
 
@@ -48,11 +130,14 @@ InoKit is a modern e-commerce platform specializing in electronic components and
 
 - **Backend:** Django 4.2
 - **Frontend:** Bootstrap 5.1, HTML5, CSS3, JavaScript
-- **Database:** SQLite (default), PostgreSQL (production)
+- **Database:** PostgreSQL (Docker), SQLite (alternative)
 - **Additional Libraries:**
   - Font Awesome 6.0
   - Google Fonts
   - Custom CSS animations
+- **Containerization:**
+  - Docker
+  - Docker Compose
 
 ## 📋 Prerequisites
 
