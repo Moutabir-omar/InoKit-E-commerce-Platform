@@ -1,0 +1,143 @@
+{% extends 'ecom/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Mes Commandes</h2>
+    
+    {% for order in orders %}
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-light">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h5 class="mb-0">Commande #{{ order.id }}</h5>
+                </div>
+                <div class="col text-end">
+                    <span class="badge {% if order.status == 'Delivered' %}bg-success{% else %}bg-primary{% endif %}">
+                        {{ order.status }}
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-body">
+            <!-- Order Items -->
+            <div class="row">
+                {% for item in order.items.all %}
+                <div class="col-md-6 mb-3">
+                    <div class="d-flex align-items-center">
+                        {% if item.product.product_image %}
+                            <img src="{{ item.product.product_image.url }}" alt="{{ item.product.name }}"
+                                 class="me-3" style="width: 80px; height: 80px; object-fit: contain;">
+                        {% endif %}
+                        <div>
+                            <h6 class="mb-1">{{ item.product.name }}</h6>
+                            <p class="text-muted mb-1">Quantité: {{ item.quantity }}</p>
+                            <p class="mb-0">Prix: {{ item.get_cost }} €</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Order Progress -->
+            <div class="progress-track mt-4">
+                <ul class="list-unstyled d-flex justify-content-between position-relative">
+                    <li class="text-center {% if order.status != 'Pending' %}done{% endif %}">
+                        <i class="fas fa-box mb-2"></i>
+                        <span class="d-block">Commande reçue</span>
+                    </li>
+                    <li class="text-center {% if order.status == 'Confirmed' or order.status == 'Shipped' or order.status == 'Delivered' %}done{% endif %}">
+                        <i class="fas fa-check mb-2"></i>
+                        <span class="d-block">Confirmée</span>
+                    </li>
+                    <li class="text-center {% if order.status == 'Shipped' or order.status == 'Delivered' %}done{% endif %}">
+                        <i class="fas fa-truck mb-2"></i>
+                        <span class="d-block">En livraison</span>
+                    </li>
+                    <li class="text-center {% if order.status == 'Delivered' %}done{% endif %}">
+                        <i class="fas fa-home mb-2"></i>
+                        <span class="d-block">Livrée</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Order Details -->
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <h6>Adresse de livraison</h6>
+                    <p class="mb-0">{{ order.shipping_address }}</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <h6>Total</h6>
+                    <h4 class="text-primary mb-0">{{ order.get_total_cost }} €</h4>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-footer bg-light">
+            <div class="row align-items-center">
+                <div class="col">
+                    <small class="text-muted">Commandé le {{ order.created_at|date:"d/m/Y" }}</small>
+                </div>
+                <div class="col text-end">
+                    <a href="{% url 'ecom:download-invoice' order.id %}" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-download me-1"></i> Télécharger la facture
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="text-center py-5">
+        <i class="fas fa-shopping-bag mb-3" style="font-size: 3rem; color: #ccc;"></i>
+        <h4>Vous n'avez pas encore de commandes</h4>
+        <p class="text-muted">Commencez vos achats maintenant!</p>
+        <a href="{% url 'ecom:product_list' %}" class="btn btn-primary">Voir les produits</a>
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+.progress-track {
+    margin-top: 50px;
+}
+
+.progress-track ul {
+    padding: 0;
+    margin: 0;
+}
+
+.progress-track ul li {
+    width: 25%;
+    position: relative;
+    color: #ccc;
+}
+
+.progress-track ul li.done {
+    color: #00ff9d;
+}
+
+.progress-track ul li::before {
+    content: '';
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    width: 100%;
+    height: 2px;
+    background-color: #ccc;
+}
+
+.progress-track ul li:last-child::before {
+    display: none;
+}
+
+.progress-track ul li.done::before {
+    background-color: #00ff9d;
+}
+
+.progress-track i {
+    font-size: 24px;
+}
+</style>
+{% endblock %} 

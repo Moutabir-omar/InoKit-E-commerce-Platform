@@ -1,0 +1,379 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Shopping Cart - InoKit{% endblock %}
+
+{% block content %}
+<!-- Cart Header -->
+<div class="page-header py-5 bg-gradient-light position-relative overflow-hidden">
+    <div class="circuit-pattern position-absolute w-100 h-100"></div>
+    <div class="container position-relative">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-center mb-3">
+                <li class="breadcrumb-item"><a href="{% url 'shop:product_list' %}" class="text-decoration-none">Shop</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Shopping Cart</li>
+            </ol>
+        </nav>
+        <h1 class="text-center mb-0">
+            <span class="text-gradient fw-bold">Shopping Cart</span>
+        </h1>
+        <p class="text-center text-muted mt-3 mb-0">Review your items and proceed to checkout</p>
+    </div>
+</div>
+
+<!-- Progress Bar -->
+<div class="checkout-progress bg-white border-bottom">
+    <div class="container py-3">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="d-flex justify-content-between position-relative">
+                    <div class="progress position-absolute w-100" style="top: 50%; transform: translateY(-50%); height: 2px;">
+                        <div class="progress-bar bg-primary" role="progressbar" style="width: 50%"></div>
+                    </div>
+                    <div class="step active">
+                        <div class="step-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="step-label">Cart</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-icon">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        <div class="step-label">Payment</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="step-label">Confirmation</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    {% if cart.items.count %}
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Cart Items -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    {% for item in cart.items.all %}
+                    <div class="cart-item hover-up mb-4 {% if not forloop.last %}border-bottom pb-4{% endif %}">
+                        <div class="row align-items-center">
+                            <div class="col-md-2">
+                                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" 
+                                     class="img-fluid rounded shadow-sm product-image">
+                            </div>
+                            <div class="col-md-4">
+                                <h5 class="text-primary mb-2">{{ item.product.name }}</h5>
+                                <p class="text-muted small mb-0">{{ item.product.description|truncatewords:10 }}</p>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="quantity-control">
+                                    <form action="{% url 'shop:update_cart' item.id %}" method="post" 
+                                          class="d-flex align-items-center justify-content-center">
+                                        {% csrf_token %}
+                                        <button type="button" class="btn btn-outline-primary btn-sm quantity-btn" 
+                                                onclick="decrementQuantity(this)">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <input type="number" name="quantity" value="{{ item.quantity }}" 
+                                               min="1" max="{{ item.product.stock }}" 
+                                               class="form-control quantity-input mx-2"
+                                               onchange="this.form.submit()">
+                                        <button type="button" class="btn btn-outline-primary btn-sm quantity-btn" 
+                                                onclick="incrementQuantity(this)">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <span class="text-gradient fw-bold price-display">{{ item.total_price }} DH</span>
+                            </div>
+                            <div class="col-md-1">
+                                <form action="{% url 'shop:remove_from_cart' item.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-link text-danger remove-btn">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Cart Summary -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm sticky-top" style="top: 20px;">
+                <div class="card-body p-4">
+                    <h4 class="text-gradient fw-bold mb-4">Order Summary</h4>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="text-muted">Subtotal</span>
+                        <span class="text-gradient fw-bold">${{ cart.get_total }} DH</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="text-muted">Shipping</span>
+                        <span class="text-gradient fw-bold">0.00 DH</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-4">
+                        <span class="fw-bold">Total</span>
+                        <span class="text-gradient fw-bold h4 mb-0">{{ cart.get_total }} DH</span>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'shop:checkout' %}" class="btn btn-primary btn-lg hover-up">
+                            <i class="fas fa-lock me-2"></i>Proceed to Checkout
+                        </a>
+                        <a href="{% url 'shop:product_list' %}" class="btn btn-outline-primary hover-up">
+                            <i class="fas fa-arrow-left me-2"></i>Continue Shopping
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <div class="empty-cart-animation mb-4">
+            <i class="fas fa-shopping-cart fa-4x text-muted"></i>
+            <div class="empty-cart-wave"></div>
+        </div>
+        <h3 class="text-gradient mb-3">Your cart is empty</h3>
+        <p class="text-muted mb-4">Looks like you haven't added any items to your cart yet.</p>
+        <a href="{% url 'shop:product_list' %}" class="btn btn-primary btn-lg hover-up">
+            <i class="fas fa-store me-2"></i>Start Shopping
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.bg-gradient-light {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(230, 243, 255, 0.95) 100%);
+}
+
+.circuit-pattern {
+    background: url('{% static "images/background/circuit_pattern.jpg" %}') center/cover;
+    opacity: 0.15;
+    filter: brightness(1.2) contrast(1.1);
+}
+
+.text-gradient {
+    background: linear-gradient(135deg, #004d99 0%, #0066cc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+}
+
+.hover-up {
+    transition: all 0.3s ease;
+}
+
+.hover-up:hover {
+    transform: translateY(-3px);
+}
+
+.product-image {
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 102, 204, 0.1);
+}
+
+.cart-item:hover .product-image {
+    transform: scale(1.05);
+}
+
+.quantity-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 102, 204, 0.05);
+    padding: 0.5rem;
+    border-radius: 50px;
+}
+
+.quantity-btn {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.quantity-btn:hover {
+    transform: scale(1.1);
+}
+
+.quantity-input {
+    width: 50px;
+    text-align: center;
+    border: none;
+    background: transparent;
+    font-weight: bold;
+}
+
+.quantity-input::-webkit-inner-spin-button,
+.quantity-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #0066cc 0%, #004d99 100%);
+    border: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%);
+    transition: transform 0.3s ease;
+    transform: translateX(-100%);
+}
+
+.btn-primary:hover::after {
+    transform: translateX(100%);
+}
+
+.btn-outline-primary {
+    border-color: #0066cc;
+    color: #0066cc;
+}
+
+.btn-outline-primary:hover {
+    background: linear-gradient(135deg, #0066cc 0%, #004d99 100%);
+    border-color: transparent;
+    color: white;
+}
+
+.empty-cart-animation {
+    position: relative;
+    display: inline-block;
+}
+
+.empty-cart-wave {
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle, rgba(0,102,204,0.1) 0%, rgba(255,255,255,0) 70%);
+    border-radius: 50%;
+    animation: wave 2s infinite;
+}
+
+@keyframes wave {
+    0% {
+        transform: translateX(-50%) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(-50%) scale(2);
+        opacity: 0;
+    }
+}
+
+.page-header {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(230, 243, 255, 0.95) 100%);
+    border-bottom: 1px solid rgba(0, 102, 204, 0.1);
+}
+
+.breadcrumb {
+    background: transparent;
+}
+
+.breadcrumb-item a {
+    color: #0066cc;
+    font-weight: 500;
+}
+
+.breadcrumb-item.active {
+    color: #666;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    color: #666;
+}
+
+.checkout-progress {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(230, 243, 255, 0.95) 100%);
+}
+
+.step {
+    text-align: center;
+    z-index: 1;
+    background: white;
+    padding: 0 1rem;
+}
+
+.step-icon {
+    width: 40px;
+    height: 40px;
+    background: white;
+    border: 2px solid #ddd;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.5rem;
+    color: #666;
+    transition: all 0.3s ease;
+}
+
+.step.active .step-icon {
+    background: linear-gradient(135deg, #0066cc 0%, #004d99 100%);
+    border-color: transparent;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 102, 204, 0.2);
+}
+
+.step-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #666;
+}
+
+.step.active .step-label {
+    color: #0066cc;
+}
+</style>
+
+<script>
+function incrementQuantity(button) {
+    const input = button.parentElement.querySelector('input[type="number"]');
+    const max = parseInt(input.getAttribute('max'));
+    const currentValue = parseInt(input.value);
+    if (currentValue < max) {
+        input.value = currentValue + 1;
+        input.dispatchEvent(new Event('change'));
+    }
+}
+
+function decrementQuantity(button) {
+    const input = button.parentElement.querySelector('input[type="number"]');
+    const currentValue = parseInt(input.value);
+    if (currentValue > 1) {
+        input.value = currentValue - 1;
+        input.dispatchEvent(new Event('change'));
+    }
+}
+</script>
+{% endblock %} 

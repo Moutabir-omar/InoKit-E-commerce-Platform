@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="{{ product.image.url }}" class="img-fluid rounded" alt="{{ product.name }}">
+        </div>
+        <div class="col-md-6">
+            <h1 class="mb-3">{{ product.name }}</h1>
+            <p class="lead">{{ product.description }}</p>
+            <p class="h3 text-primary mb-4"><span data-translate="price">{% trans "Price" %}</span>: {{ product.price }} DH</p>
+            
+            <div class="mb-4">
+                <h4 data-translate="stock_status">{% trans "Stock Status" %}:</h4>
+                {% if product.stock > 0 %}
+                <p class="text-success"><span data-translate="in_stock">{% trans "In Stock" %}</span> ({{ product.stock }} <span data-translate="available">{% trans "available" %}</span>)</p>
+                {% else %}
+                <p class="text-danger" data-translate="out_of_stock">{% trans "Out of Stock" %}</p>
+                {% endif %}
+            </div>
+            
+            <form action="{% url 'shop:add_to_cart' product.pk %}" method="post">
+                {% csrf_token %}
+                <div class="form-group mb-3">
+                    <label for="quantity" data-translate="quantity">{% trans "Quantity" %}:</label>
+                    <input type="number" name="quantity" id="quantity" class="form-control" value="1" min="1" max="{{ product.stock }}">
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg" data-translate="add_to_cart">{% trans "Add to Cart" %}</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

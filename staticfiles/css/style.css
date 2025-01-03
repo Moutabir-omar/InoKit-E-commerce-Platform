@@ -1,0 +1,23 @@
+/* Main styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+}
+
+.navbar {
+    background: linear-gradient(to right, #1a1a1a, #2c3e50) !important;
+}
+
+.btn-inokit {
+    background-color: #00ff9d;
+    border-color: #00ff9d;
+}
+
+/* Product cards */
+.product-card {
+    transition: transform 0.3s;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}

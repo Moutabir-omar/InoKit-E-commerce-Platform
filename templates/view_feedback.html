@@ -1,0 +1,33 @@
+{% extends 'ecom/admin_base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-gradient" style="background: linear-gradient(to right, #00ff9d, #2c3e50)">
+            <h3 class="text-white mb-0">Retours Clients</h3>
+        </div>
+        
+        <div class="card-body">
+            {% for feedback in feedbacks %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="card-title mb-0">{{ feedback.name }}</h5>
+                        <small class="text-muted">{{ feedback.date|date:"d/m/Y" }}</small>
+                    </div>
+                    <p class="card-text">{{ feedback.feedback }}</p>
+                </div>
+            </div>
+            {% empty %}
+            <div class="text-center py-4">
+                <i class="fas fa-comments mb-3" style="font-size: 3rem; color: #ccc;"></i>
+                <h4>Aucun retour pour le moment</h4>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<a href="{% url 'ecom:dashboard' %}" class="btn btn-outline-primary">Back to Dashboard</a>
+{% endblock %} 

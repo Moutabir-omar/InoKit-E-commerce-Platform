@@ -1,0 +1,460 @@
+<!--
+    Copyright (c) 2024 Omar Moutabir
+    InoKit E-commerce Platform
+    Author: Omar Moutabir
+    Contact: omar.moutabir@gmail.com
+    All rights reserved. This code is protected by copyright law.
+    Unauthorized copying, modification, distribution, or use of this code is strictly prohibited.
+    
+    This is the main base template that defines the structure and layout of the entire website.
+    Any unauthorized use, copying, or modification of this code is strictly prohibited.
+-->
+
+{% load static %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<!-- 
+    Head Section
+    Copyright (c) 2024 Omar Moutabir - All rights reserved
+-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}InoKit{% endblock %}</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    {% block extra_css %}{% endblock %}
+
+    <style>
+    .navbar {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(230, 243, 255, 0.95) 100%);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(0, 102, 204, 0.1);
+    }
+
+    .text-gradient {
+        background: linear-gradient(135deg, #004d99 0%, #0066cc 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .nav-link {
+        color: #333;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(135deg, #004d99 0%, #0066cc 100%);
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
+    }
+
+    .nav-link:hover::after {
+        width: 100%;
+    }
+
+    .hover-up {
+        transition: all 0.3s ease;
+    }
+
+    .hover-up:hover {
+        transform: translateY(-3px);
+    }
+
+    .search-bar .input-group {
+        background: white;
+        border-radius: 50px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0, 102, 204, 0.1);
+    }
+
+    .search-bar .form-control {
+        border: none;
+        padding: 0.5rem 1rem;
+    }
+
+    .search-bar .btn {
+        border-radius: 0 50px 50px 0;
+        padding: 0.5rem 1.25rem;
+    }
+
+    .btn-outline-primary {
+        border-color: #0066cc;
+        color: #0066cc;
+    }
+
+    .btn-outline-primary:hover {
+        background: linear-gradient(135deg, #0066cc 0%, #004d99 100%);
+        border-color: transparent;
+        color: white;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #0066cc 0%, #004d99 100%);
+        border: none;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #0052a3 0%, #003d80 100%);
+    }
+
+    .dropdown-menu {
+        border: none;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+
+    .dropdown-item {
+        padding: 0.5rem 1.5rem;
+        transition: all 0.2s ease;
+    }
+
+    .dropdown-item:hover {
+        background: rgba(0, 102, 204, 0.1);
+    }
+
+    .badge {
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .footer {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(230, 243, 255, 0.95) 100%);
+        border-top: 1px solid rgba(0, 102, 204, 0.1);
+        padding: 4rem 0;
+    }
+
+    .footer-bg-pattern {
+        background: url('{% static "images/background/circuit_pattern.jpg" %}') center/cover;
+        opacity: 0.1;
+    }
+
+    .footer-link {
+        color: #333;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: block;
+        padding: 0.5rem 0;
+    }
+
+    .footer-link:hover {
+        color: #0066cc;
+        transform: translateX(5px);
+    }
+
+    .link-icon {
+        margin-right: 0.5rem;
+        color: #0066cc;
+    }
+
+    .contact-icon {
+        width: 20px;
+        margin-right: 0.75rem;
+        color: #0066cc;
+    }
+
+    .social-btn {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: white;
+        color: #0066cc;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 10px rgba(0, 102, 204, 0.1);
+    }
+
+    .social-btn:hover {
+        background: linear-gradient(135deg, #0066cc 0%, #004d99 100%);
+        color: white;
+        transform: translateY(-3px);
+    }
+
+    .newsletter-form .input-group {
+        background: white;
+        border-radius: 50px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0, 102, 204, 0.1);
+    }
+
+    .newsletter-form .form-control {
+        border: none;
+        padding: 0.75rem 1.5rem;
+    }
+
+    .newsletter-form .btn {
+        border-radius: 0 50px 50px 0;
+        padding: 0.75rem 1.5rem;
+    }
+    </style>
+</head>
+
+<!-- 
+    Body Section
+    Copyright (c) 2024 Omar Moutabir - All rights reserved
+-->
+<body>
+    <!-- 
+        Navbar Section
+        Copyright (c) 2024 Omar Moutabir - All rights reserved
+    -->
+    <nav class="navbar navbar-expand-lg navbar-dark shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'core:home' %}">
+                <img src="{% static 'images/logos/logo.jpg' %}" alt="InoKit Logo" class="rounded me-2" style="height: 40px;">
+                <span class="text-gradient">InoKit</span>
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link hover-up" href="{% url 'shop:product_list' %}">{% trans "Products" %}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link hover-up" href="#categories">{% trans "Categories" %}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link hover-up" href="{% url 'core:about' %}">{% trans "About Us" %}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link hover-up" href="{% url 'core:contact' %}">{% trans "Contact" %}</a>
+                    </li>
+                </ul>
+                
+                <div class="d-flex align-items-center gap-3">
+                    <!-- Language Selector -->
+                    <div class="dropdown">
+                        <button class="btn btn-outline-primary dropdown-toggle language-selector" type="button" id="languageDropdown" data-bs-toggle="dropdown">
+                            <i class="fas fa-globe me-1"></i>
+                            <span class="current-lang">{{ LANGUAGE_CODE|upper }}</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#" data-lang="en"><i class="fas fa-check me-2 {% if LANGUAGE_CODE != 'en' %}opacity-0{% endif %}"></i>English</a></li>
+                            <li><a class="dropdown-item" href="#" data-lang="ar"><i class="fas fa-check me-2 {% if LANGUAGE_CODE != 'ar' %}opacity-0{% endif %}"></i>العربية</a></li>
+                            <li><a class="dropdown-item" href="#" data-lang="fr"><i class="fas fa-check me-2 {% if LANGUAGE_CODE != 'fr' %}opacity-0{% endif %}"></i>Français</a></li>
+                            <li><a class="dropdown-item" href="#" data-lang="am"><i class="fas fa-check me-2 {% if LANGUAGE_CODE != 'am' %}opacity-0{% endif %}"></i>Tamaziɣt</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Search Form -->
+                    <form class="search-bar d-flex" action="{% url 'shop:product_list' %}" method="GET">
+                        <div class="input-group">
+                            <input type="search" name="query" class="form-control" placeholder="{% trans 'Search products...' %}">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <!-- Cart -->
+                    <a href="{% url 'shop:cart_detail' %}" class="btn btn-outline-primary position-relative hover-up">
+                        <i class="fas fa-shopping-cart"></i>
+                        {% if cart.items.count %}
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
+                            {{ cart.items.count }}
+                        </span>
+                        {% endif %}
+                    </a>
+                    
+                    <!-- User Menu -->
+                    {% if user.is_authenticated %}
+                    <div class="dropdown">
+                        <button class="btn btn-outline-primary dropdown-toggle hover-up" type="button" id="userDropdown" data-bs-toggle="dropdown">
+                            <i class="fas fa-user me-1"></i>{{ user.username }}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{% url 'shop:complaint_list' %}">{% trans "My Complaints" %}</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'logout' %}">{% trans "Logout" %}</a></li>
+                        </ul>
+                    </div>
+                    {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-outline-primary hover-up">
+                        <i class="fas fa-sign-in-alt me-1"></i>{% trans "Login" %}
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 
+        Main Content Section
+        Copyright (c) 2024 Omar Moutabir - All rights reserved
+    -->
+    {% block content %}
+    {% endblock %}
+
+    <!-- 
+        Footer Section
+        Copyright (c) 2024 Omar Moutabir - All rights reserved
+    -->
+    <footer class="footer position-relative">
+        <div class="footer-bg-pattern position-absolute top-0 start-0 w-100 h-100"></div>
+        <div class="container position-relative">
+            <div class="row g-4 justify-content-between">
+                <!-- Company Info -->
+                <div class="col-lg-4">
+                    <div class="mb-4">
+                        <div class="footer-logo mb-4">
+                            <h3 class="text-gradient fw-bold m-0">
+                                Ino<span class="text-primary">Kit</span>
+                            </h3>
+                        </div>
+                        <p class="text-dark mb-0">
+                            {% trans "Your trusted destination for high-quality electronic components and innovative products for all your electronic needs." %}
+                        </p>
+                    </div>
+                    <div class="d-flex gap-3 mt-4">
+                        <a href="#" class="social-btn">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="social-btn">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="text-gradient mb-4 fw-bold">{% trans "Quick Links" %}</h5>
+                    <ul class="list-unstyled footer-links">
+                        <li>
+                            <a href="{% url 'core:home' %}" class="footer-link">
+                                <span class="link-icon">›</span>{% trans "Home" %}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'core:about' %}" class="footer-link">
+                                <span class="link-icon">›</span>{% trans "About" %}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'shop:product_list' %}" class="footer-link">
+                                <span class="link-icon">›</span>{% trans "Products" %}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'core:contact' %}" class="footer-link">
+                                <span class="link-icon">›</span>{% trans "Contact" %}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-gradient mb-4 fw-bold">{% trans "Contact Info" %}</h5>
+                    <ul class="list-unstyled footer-links">
+                        <li>
+                            <a href="mailto:omar.moutabir@gmail.com" class="footer-link">
+                                <i class="fas fa-envelope contact-icon"></i>
+                                <span>omar.moutabir@gmail.com</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="tel:+212600000000" class="footer-link">
+                                <i class="fas fa-phone contact-icon"></i>
+                                <span>+212 6XX XXX XXX</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="footer-link">
+                                <i class="fas fa-map-marker-alt contact-icon"></i>
+                                <span>{% trans "Morocco" %}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter -->
+                <div class="col-lg-3">
+                    <h5 class="text-gradient mb-4 fw-bold">{% trans "Newsletter" %}</h5>
+                    <p class="text-dark mb-4">{% trans "Subscribe to our newsletter for updates and special offers!" %}</p>
+                    <form class="newsletter-form">
+                        <div class="input-group">
+                            <input type="email" class="form-control" placeholder="{% trans 'Enter your email' %}">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 
+        Scripts Section
+        Copyright (c) 2024 Omar Moutabir - All rights reserved
+    -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Language Switcher Script -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const languageItems = document.querySelectorAll('[data-lang]');
+        
+        languageItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const lang = this.dataset.lang;
+                
+                // Create a form to submit the language change
+                const form = document.createElement('form');
+                form.method = 'post';
+                form.action = '/i18n/setlang/';
+                
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = 'csrfmiddlewaretoken';
+                csrfInput.value = '{{ csrf_token }}';
+                
+                const langInput = document.createElement('input');
+                langInput.type = 'hidden';
+                langInput.name = 'language';
+                langInput.value = lang;
+                
+                form.appendChild(csrfInput);
+                form.appendChild(langInput);
+                document.body.appendChild(form);
+                form.submit();
+            });
+        });
+    });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html> 

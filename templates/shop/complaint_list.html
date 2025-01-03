@@ -1,0 +1,46 @@
+{% extends 'base/base.html' %}
+
+{% block title %}My Complaints - E-Store{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="mb-3">My Complaints</h2>
+            <a href="{% url 'shop:create_complaint' %}" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>Submit New Complaint
+            </a>
+        </div>
+    </div>
+
+    {% if complaints %}
+    <div class="row">
+        {% for complaint in complaints %}
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ complaint.subject }}</h5>
+                    <p class="card-text text-muted">
+                        <small>Submitted on {{ complaint.created_at|date:"F j, Y" }}</small>
+                    </p>
+                    <p class="card-text">{{ complaint.description|truncatewords:30 }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge {% if complaint.status == 'pending' %}bg-warning{% elif complaint.status == 'in_progress' %}bg-info{% else %}bg-success{% endif %}">
+                            {{ complaint.get_status_display }}
+                        </span>
+                        <a href="{% url 'shop:complaint_detail' complaint.pk %}" class="btn btn-outline-primary btn-sm">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle me-2"></i>You haven't submitted any complaints yet.
+    </div>
+    {% endif %}
+</div>
+{% endblock %} 

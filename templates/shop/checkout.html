@@ -1,0 +1,372 @@
+{% extends 'base/base.html' %}
+{% load widget_tweaks %}
+{% load static %}
+
+{% block title %}Checkout - InoKit{% endblock %}
+
+{% block content %}
+<!-- Checkout Header -->
+<div class="page-header py-5 bg-gradient-light position-relative overflow-hidden">
+    <div class="circuit-pattern position-absolute w-100 h-100"></div>
+    <div class="container position-relative">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb justify-content-center mb-3">
+                <li class="breadcrumb-item"><a href="{% url 'shop:product_list' %}" class="text-decoration-none">Shop</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'shop:cart_detail' %}" class="text-decoration-none">Cart</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+            </ol>
+        </nav>
+        <h1 class="text-center mb-0">
+            <span class="text-gradient fw-bold">Secure Checkout</span>
+        </h1>
+        <p class="text-center text-muted mt-3 mb-0">Complete your purchase securely</p>
+    </div>
+</div>
+
+<!-- Progress Bar -->
+<div class="checkout-progress bg-white border-bottom">
+    <div class="container py-3">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="d-flex justify-content-between position-relative">
+                    <div class="progress position-absolute w-100" style="top: 50%; transform: translateY(-50%); height: 2px;">
+                        <div class="progress-bar bg-primary" role="progressbar" style="width: 75%"></div>
+                    </div>
+                    <div class="step completed">
+                        <div class="step-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="step-label">Cart</div>
+                    </div>
+                    <div class="step active">
+                        <div class="step-icon">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        <div class="step-label">Payment</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="step-label">Confirmation</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row">
+        <!-- Order Summary -->
+        <div class="col-md-4 order-md-2 mb-4">
+            <div class="card border-0 shadow-sm sticky-top" style="top: 20px;">
+                <div class="card-header bg-gradient-light border-0">
+                    <h4 class="mb-0 text-gradient fw-bold">Order Summary</h4>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        {% for item in cart.items.all %}
+                        <li class="list-group-item border-0 d-flex justify-content-between lh-sm py-3">
+                            <div>
+                                <h6 class="my-0 text-primary">{{ item.product.name }}</h6>
+                                <small class="text-muted">Quantity: {{ item.quantity }}</small>
+                            </div>
+                            <span class="text-gradient fw-bold">{{ item.total_price }} DH</span>
+                        </li>
+                        {% endfor %}
+                        <li class="list-group-item border-0 d-flex justify-content-between mt-3">
+                            <strong class="text-gradient">Total</strong>
+                            <strong class="text-gradient h4 mb-0">{{ cart.get_total }} DH</strong>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Checkout Form -->
+        <div class="col-md-8 order-md-1">
+            <form method="post" class="needs-validation" novalidate>
+                {% csrf_token %}
+                
+                <!-- Shipping Information -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <h4 class="text-gradient fw-bold mb-4">Shipping Information</h4>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label for="{{ form.full_name.id_for_label }}" class="form-label">Full Name</label>
+                                {% render_field form.full_name class="form-control" placeholder="Enter your full name" %}
+                                {% if form.full_name.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.full_name.errors }}
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-12">
+                                <label for="{{ form.email.id_for_label }}" class="form-label">Email</label>
+                                {% render_field form.email class="form-control" placeholder="Enter your email" %}
+                                {% if form.email.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.email.errors }}
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-12">
+                                <label for="{{ form.phone.id_for_label }}" class="form-label">Phone Number</label>
+                                {% render_field form.phone class="form-control" placeholder="Enter your phone number" %}
+                                {% if form.phone.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.phone.errors }}
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-12">
+                                <label for="{{ form.address.id_for_label }}" class="form-label">Shipping Address</label>
+                                {% render_field form.address class="form-control" placeholder="Enter your shipping address" %}
+                                {% if form.address.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.address.errors }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Information -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <h4 class="text-gradient fw-bold mb-4">Payment Information</h4>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label for="{{ form.card_number.id_for_label }}" class="form-label">Card Number</label>
+                                {% render_field form.card_number class="form-control" placeholder="Enter your card number" %}
+                                {% if form.card_number.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.card_number.errors }}
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="{{ form.card_expiry.id_for_label }}" class="form-label">Expiry Date</label>
+                                {% render_field form.card_expiry class="form-control" placeholder="MM/YY" %}
+                                {% if form.card_expiry.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.card_expiry.errors }}
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="{{ form.card_cvv.id_for_label }}" class="form-label">CVV</label>
+                                {% render_field form.card_cvv class="form-control" placeholder="CVV" %}
+                                {% if form.card_cvv.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.card_cvv.errors }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="w-100 btn btn-primary btn-lg hover-up" type="submit">
+                    <i class="fas fa-lock me-2"></i>Place Order
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+.bg-gradient-light {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(230, 243, 255, 0.95) 100%);
+}
+
+.circuit-pattern {
+    background: url('{% static "images/background/circuit_pattern.jpg" %}') center/cover;
+    opacity: 0.15;
+    filter: brightness(1.2) contrast(1.1);
+}
+
+.text-gradient {
+    background: linear-gradient(135deg, #004d99 0%, #0066cc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+}
+
+.hover-up {
+    transition: all 0.3s ease;
+}
+
+.hover-up:hover {
+    transform: translateY(-3px);
+}
+
+.form-control {
+    border: 1px solid rgba(0, 102, 204, 0.1);
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #0066cc;
+    box-shadow: 0 0 0 0.2rem rgba(0, 102, 204, 0.15);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #0066cc 0%, #004d99 100%);
+    border: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%);
+    transition: transform 0.3s ease;
+    transform: translateX(-100%);
+}
+
+.btn-primary:hover::after {
+    transform: translateX(100%);
+}
+
+.card {
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.form-label {
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.invalid-feedback {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.page-header {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(230, 243, 255, 0.95) 100%);
+    border-bottom: 1px solid rgba(0, 102, 204, 0.1);
+}
+
+.breadcrumb {
+    background: transparent;
+}
+
+.breadcrumb-item a {
+    color: #0066cc;
+    font-weight: 500;
+}
+
+.breadcrumb-item.active {
+    color: #666;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    color: #666;
+}
+
+.checkout-progress {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(230, 243, 255, 0.95) 100%);
+}
+
+.step {
+    text-align: center;
+    z-index: 1;
+    background: white;
+    padding: 0 1rem;
+}
+
+.step-icon {
+    width: 40px;
+    height: 40px;
+    background: white;
+    border: 2px solid #ddd;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.5rem;
+    color: #666;
+    transition: all 0.3s ease;
+}
+
+.step.active .step-icon {
+    background: linear-gradient(135deg, #0066cc 0%, #004d99 100%);
+    border-color: transparent;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 102, 204, 0.2);
+}
+
+.step.completed .step-icon {
+    background: #28a745;
+    border-color: transparent;
+    color: white;
+}
+
+.step-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #666;
+}
+
+.step.active .step-label {
+    color: #0066cc;
+}
+
+.step.completed .step-label {
+    color: #28a745;
+}
+</style>
+
+{% block extra_js %}
+<script>
+    // Auto-format card expiry date
+    document.getElementById('{{ form.card_expiry.id_for_label }}').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length >= 2) {
+            value = value.slice(0, 2) + '/' + value.slice(2);
+        }
+        e.target.value = value.slice(0, 5);
+    });
+
+    // Format card number with spaces
+    document.getElementById('{{ form.card_number.id_for_label }}').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        let formattedValue = '';
+        for (let i = 0; i < value.length; i++) {
+            if (i > 0 && i % 4 === 0) {
+                formattedValue += ' ';
+            }
+            formattedValue += value[i];
+        }
+        e.target.value = formattedValue.slice(0, 19);
+    });
+
+    // Limit CVV to 3 digits
+    document.getElementById('{{ form.card_cvv.id_for_label }}').addEventListener('input', function(e) {
+        e.target.value = e.target.value.replace(/\D/g, '').slice(0, 3);
+    });
+</script>
+{% endblock %}
+{% endblock %} 

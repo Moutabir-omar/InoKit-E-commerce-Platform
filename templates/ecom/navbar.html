@@ -1,0 +1,374 @@
+{% load static %}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="{% url 'core:home' %}">
+            <img src="{% static 'images/logos/logo.jpg' %}" alt="InoKit Logo" class="rounded me-2" style="height: 40px;">
+            <span class="text-gradient">InoKit</span>
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item">
+                    <a class="nav-link hover-up" href="{% url 'shop:product_list' %}" data-translate="products">Products</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link hover-up" href="#categories" data-translate="categories">Categories</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link hover-up" href="{% url 'core:about' %}" data-translate="about">About Us</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link hover-up" href="{% url 'core:contact' %}" data-translate="contact">Contact</a>
+                </li>
+            </ul>
+            
+            <div class="d-flex align-items-center gap-3">
+                <!-- Language Selector -->
+                <div class="dropdown">
+                    <button class="btn btn-outline-primary dropdown-toggle language-selector" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-globe me-1"></i>
+                        <span class="current-lang">EN</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+                        <li><a class="dropdown-item" href="#" data-lang="en"><i class="fas fa-check me-2 opacity-0"></i>English</a></li>
+                        <li><a class="dropdown-item" href="#" data-lang="ar"><i class="fas fa-check me-2 opacity-0"></i>العربية</a></li>
+                        <li><a class="dropdown-item" href="#" data-lang="fr"><i class="fas fa-check me-2 opacity-0"></i>Français</a></li>
+                        <li><a class="dropdown-item" href="#" data-lang="am"><i class="fas fa-check me-2 opacity-0"></i>Tamaziɣt</a></li>
+                    </ul>
+                </div>
+
+                <!-- Search Form -->
+                <form class="search-bar d-flex" action="{% url 'shop:product_list' %}" method="GET">
+                    <div class="input-group">
+                        <input type="search" name="query" class="form-control" placeholder="Search products..." data-translate="search_placeholder">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Cart -->
+                <a href="{% url 'shop:cart_detail' %}" class="btn btn-outline-primary position-relative hover-up">
+                    <i class="fas fa-shopping-cart"></i>
+                    {% if cart.items.count %}
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
+                        {{ cart.items.count }}
+                    </span>
+                    {% endif %}
+                </a>
+                
+                <!-- User Menu -->
+                {% if user.is_authenticated %}
+                <div class="dropdown">
+                    <button class="btn btn-outline-primary dropdown-toggle hover-up" type="button" id="userDropdown" data-bs-toggle="dropdown">
+                        <i class="fas fa-user me-1"></i>{{ user.username }}
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{% url 'shop:complaint_list' %}" data-translate="complaints">My Complaints</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{% url 'logout' %}" data-translate="logout">Logout</a></li>
+                    </ul>
+                </div>
+                {% else %}
+                <a href="{% url 'login' %}" class="btn btn-outline-primary hover-up">
+                    <i class="fas fa-sign-in-alt me-1"></i><span data-translate="login">Login</span>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>
+
+<style>
+.navbar {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(230, 243, 255, 0.95) 100%);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 102, 204, 0.1);
+}
+
+.text-gradient {
+    background: linear-gradient(135deg, #004d99 0%, #0066cc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+}
+
+.nav-link {
+    color: #333;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(135deg, #004d99 0%, #0066cc 100%);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+.hover-up {
+    transition: all 0.3s ease;
+}
+
+.hover-up:hover {
+    transform: translateY(-3px);
+}
+
+.search-bar .input-group {
+    background: white;
+    border-radius: 50px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 102, 204, 0.1);
+}
+
+.search-bar .form-control {
+    border: none;
+    padding: 0.5rem 1rem;
+}
+
+.search-bar .btn {
+    border-radius: 0 50px 50px 0;
+    padding: 0.5rem 1.25rem;
+}
+
+.btn-outline-primary {
+    border-color: #0066cc;
+    color: #0066cc;
+}
+
+.btn-outline-primary:hover {
+    background: linear-gradient(135deg, #0066cc 0%, #004d99 100%);
+    border-color: transparent;
+    color: white;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #0066cc 0%, #004d99 100%);
+    border: none;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #0052a3 0%, #003d80 100%);
+}
+
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.dropdown-item {
+    padding: 0.5rem 1.5rem;
+    transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background: rgba(0, 102, 204, 0.1);
+}
+
+.badge {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+</style>
+
+<script>
+// Translations object
+const translations = {
+    en: {
+        products: 'Products',
+        categories: 'Categories',
+        about: 'About Us',
+        contact: 'Contact',
+        search_placeholder: 'Search products...',
+        complaints: 'My Complaints',
+        logout: 'Logout',
+        login: 'Login',
+        welcome: 'Welcome to',
+        hero_description: 'Your premier destination for electronic components, development boards, and maker supplies.',
+        explore_products: 'Explore Products',
+        view_categories: 'View Categories',
+        product_categories: 'Product Categories',
+        dev_boards: 'Development Boards',
+        dev_boards_desc: 'Arduino, Raspberry Pi, and more',
+        components: 'Electronic Components',
+        components_desc: 'Resistors, capacitors, ICs',
+        tools: 'Tools & Equipment',
+        tools_desc: 'Soldering irons, multimeters',
+        featured_products: 'Featured Products',
+        add_to_cart: 'Add to Cart',
+        why_choose: 'Why Choose InoKit?',
+        fast_shipping: 'Fast Shipping',
+        shipping_desc: 'Quick delivery to your doorstep',
+        quality_products: 'Quality Products',
+        quality_desc: 'Genuine components & tools',
+        expert_support: 'Expert Support',
+        support_desc: 'Technical assistance available'
+    },
+    fr: {
+        products: 'Produits',
+        categories: 'Catégories',
+        about: 'À Propos',
+        contact: 'Contact',
+        search_placeholder: 'Rechercher des produits...',
+        complaints: 'Mes Réclamations',
+        logout: 'Déconnexion',
+        login: 'Connexion',
+        welcome: 'Bienvenue sur',
+        hero_description: 'Votre destination privilégiée pour les composants électroniques, les cartes de développement et les fournitures de création.',
+        explore_products: 'Explorer les Produits',
+        view_categories: 'Voir les Catégories',
+        product_categories: 'Catégories de Produits',
+        dev_boards: 'Cartes de Développement',
+        dev_boards_desc: 'Arduino, Raspberry Pi, et plus',
+        components: 'Composants Électroniques',
+        components_desc: 'Résistances, condensateurs, circuits intégrés',
+        tools: 'Outils et Équipement',
+        tools_desc: 'Fers à souder, multimètres',
+        featured_products: 'Produits Vedettes',
+        add_to_cart: 'Ajouter au Panier',
+        why_choose: 'Pourquoi Choisir InoKit?',
+        fast_shipping: 'Livraison Rapide',
+        shipping_desc: 'Livraison rapide à votre porte',
+        quality_products: 'Produits de Qualité',
+        quality_desc: 'Composants et outils authentiques',
+        expert_support: 'Support Expert',
+        support_desc: 'Assistance technique disponible'
+    },
+    ar: {
+        products: 'المنتجات',
+        categories: 'الفئات',
+        about: 'معلومات عنا',
+        contact: 'اتصل بنا',
+        search_placeholder: 'البحث عن المنتجات...',
+        complaints: 'شكاواي',
+        logout: 'تسجيل خروج',
+        login: 'تسجيل دخول',
+        welcome: 'مرحباً بكم في',
+        hero_description: 'وجهتك المفضلة للمكونات الإلكترونية ولوحات التطوير ومستلزمات الصناعة.',
+        explore_products: 'استكشف المنتجات',
+        view_categories: 'عرض الفئات',
+        product_categories: 'فئات المنتجات',
+        dev_boards: 'لوحات التطوير',
+        dev_boards_desc: 'أردوينو، راسبيري باي، والمزيد',
+        components: 'المكونات الإلكترونية',
+        components_desc: 'مقاومات، مكثفات، دوائر متكاملة',
+        tools: 'الأدوات والمعدات',
+        tools_desc: 'كاويات لحام، أجهزة قياس',
+        featured_products: 'المنتجات المميزة',
+        add_to_cart: 'أضف إلى السلة',
+        why_choose: 'لماذا تختار InoKit؟',
+        fast_shipping: 'شحن سريع',
+        shipping_desc: 'توصيل سريع إلى باب منزلك',
+        quality_products: 'منتجات عالية الجودة',
+        quality_desc: 'مكونات وأدوات أصلية',
+        expert_support: 'دعم متخصص',
+        support_desc: 'مساعدة تقنية متوفرة'
+    },
+    am: {
+        products: 'ⵉⴼⴻⵔⴽⴰⵏ',
+        categories: 'ⵜⴰⴳⴳⴰⵢⵉⵏ',
+        about: 'ⵅⴼⵏⵖ',
+        contact: 'ⵏⵔⵎⵙ',
+        search_placeholder: 'ⵔⵣⵓ ⵉⴼⴻⵔⴽⴰⵏ...',
+        complaints: 'ⵉⵙⴽⵉⵏⵏⵓ',
+        logout: 'ⴼⴼⵖ',
+        login: 'ⴽⵛⵎ',
+        welcome: 'ⴰⵏⵙⵓⴼ ⵖⵔ',
+        hero_description: 'ⴰⵎⵛⵉⵡⵔ ⵏⵏⴽ ⵉ ⵜⵙⵖⵓⵏⵉⵏ ⵜⵉⵎⵙⵙⵉⵔⵜⵉⵏ, ⵜⵉⴼⵔⴽⵉⵡⵉⵏ ⵏ ⵓⵙⵏⴼⵍⵓⵍ ⴷ ⵉⵎⴰⵙⵙⵏ.',
+        explore_products: 'ⵙⵉⴳⴳⵍ ⵉⴼⴻⵔⴽⴰⵏ',
+        view_categories: 'ⵥⵔ ⵜⴰⴳⴳⴰⵢⵉⵏ',
+        product_categories: 'ⵜⴰⴳⴳⴰⵢⵉⵏ ⵏ ⵉⴼⴻⵔⴽⴰⵏ',
+        dev_boards: 'ⵜⵉⴼⵔⴽⵉⵡⵉⵏ ⵏ ⵓⵙⵏⴼⵍⵓⵍ',
+        dev_boards_desc: 'ⴰⵔⴷⵓⵉⵏⵓ, ⵔⴰⵙⴱⴱⵉⵔⵉ ⴱⴰⵢ, ⴷ ⵓⴳⴳⴰⵔ',
+        components: 'ⵜⵉⵙⵖⵓⵏⵉⵏ ⵜⵉⵎⵙⵙⵉⵔⵜⵉⵏ',
+        components_desc: 'ⵉⵎⵇⴰⵡⴰⵎⵏ, ⵉⵎⴽⵜⵜⴰⴼⵏ, ⵉⵙⵉⵔⴽⵓⵜⵏ',
+        tools: 'ⵉⵎⴰⵙⵙⵏ ⴷ ⵜⵎⵔⵙⵍⵜ',
+        tools_desc: 'ⵉⵎⴰⵙⵙⵏ ⵏ ⵓⵙⵍⵖⵓ, ⵉⵎⵓⵍⵜⵉⵎⵉⵜⵔⵏ',
+        featured_products: 'ⵉⴼⴻⵔⴽⴰⵏ ⵉⵜⵜⵓⵙⵎⴰⴷⵏ',
+        add_to_cart: 'ⵔⵏⵓ ⵖⵔ ⵓⴽⵔⵔⵓⵙ',
+        why_choose: 'ⵎⴰⵖⴼ ⴰⴷ ⵜⵅⴹⴰⵔⴷ InoKit?',
+        fast_shipping: 'ⴰⵣⵏ ⴰⵣⵔⴱⴰⵏ',
+        shipping_desc: 'ⴰⵡⵙⵙ ⴰⵣⵔⴱⴰⵏ ⵖⵔ ⵜⴰⴱⴱⵓⵔⵜ ⵏⵏⴽ',
+        quality_products: 'ⵉⴼⴻⵔⴽⴰⵏ ⵉⵖⵓⴷⴰⵏⵏ',
+        quality_desc: 'ⵜⵉⵙⵖⵓⵏⵉⵏ ⴷ ⵉⵎⴰⵙⵙⵏ ⵉⵏⵖⵎⵉⵙⵏ',
+        expert_support: 'ⵜⵉⵡⵉⵙⵉ ⵜⴰⵎⵖⵏⴰⵙⵜ',
+        support_desc: 'ⵜⵉⵡⵉⵙⵉ ⵜⴰⵜⵉⵇⵏⵉⵜ ⵜⵍⵍⴰ'
+    }
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+    const languageDropdown = document.getElementById('languageDropdown');
+    const currentLang = document.querySelector('.current-lang');
+    const languageItems = document.querySelectorAll('[data-lang]');
+    const checkIcons = document.querySelectorAll('.dropdown-item .fa-check');
+    
+    // Get saved language or default to English
+    const savedLang = localStorage.getItem('language') || 'en';
+    setActiveLanguage(savedLang);
+    
+    // Add click event listeners to language options
+    languageItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            const lang = this.dataset.lang;
+            setActiveLanguage(lang);
+            localStorage.setItem('language', lang);
+            updatePageLanguage(lang);
+        });
+    });
+    
+    function setActiveLanguage(lang) {
+        // Update the current language display
+        const langMap = {
+            'en': 'EN',
+            'ar': 'عربي',
+            'fr': 'FR',
+            'am': 'ⵜⴰⵎⴰⵣⵉⵖⵜ'
+        };
+        currentLang.textContent = langMap[lang];
+        
+        // Update check icons
+        checkIcons.forEach(icon => icon.classList.add('opacity-0'));
+        const activeItem = document.querySelector(`[data-lang="${lang}"] .fa-check`);
+        if (activeItem) activeItem.classList.remove('opacity-0');
+        
+        // Set RTL for Arabic
+        document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    }
+    
+    function updatePageLanguage(lang) {
+        // Update all elements with data-translate attribute
+        document.querySelectorAll('[data-translate]').forEach(element => {
+            const key = element.dataset.translate;
+            if (translations[lang] && translations[lang][key]) {
+                if (element.tagName === 'INPUT') {
+                    element.placeholder = translations[lang][key];
+                } else {
+                    element.textContent = translations[lang][key];
+                }
+            }
+        });
+    }
+    
+    // Initial language update
+    updatePageLanguage(savedLang);
+});
+</script> 
