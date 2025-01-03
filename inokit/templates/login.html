@@ -1,0 +1,27 @@
+{% extends 'ecom/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">
+                        <span style="color: #00ff9d;">Ino</span><span style="color: #2c3e50;">Kit</span> Login
+                    </h2>
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Login</button>
+                        </div>
+                    </form>
+                    <div class="text-center mt-3">
+                        <p>Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

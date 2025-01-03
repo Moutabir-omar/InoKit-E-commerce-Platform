@@ -1,0 +1,310 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+<!-- Cart Header -->
+<div class="cart-header py-5 bg-gradient-light position-relative overflow-hidden">
+    <div class="circuit-pattern position-absolute w-100 h-100"></div>
+    <div class="container position-relative">
+        <h1 class="text-center mb-0">
+            <span class="text-gradient fw-bold" data-translate="shopping_cart">{% trans "Shopping Cart" %}</span>
+        </h1>
+    </div>
+</div>
+
+<!-- Cart Content -->
+<div class="py-5">
+    <div class="container">
+        {% if cart_items %}
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Cart Items -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        {% for item in cart_items %}
+                        <div class="cart-item hover-up mb-4 {% if not forloop.last %}border-bottom pb-4{% endif %}">
+                            <div class="row align-items-center">
+                                <div class="col-md-2">
+                                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" 
+                                         class="img-fluid rounded shadow-sm product-image">
+                                </div>
+                                <div class="col-md-5">
+                                    <h5 class="text-primary mb-2">{{ item.product.name }}</h5>
+                                    <p class="text-muted small mb-0">{{ item.product.description|truncatewords:10 }}</p>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="quantity-control">
+                                        <button type="button" class="btn btn-outline-primary btn-sm quantity-btn" 
+                                                data-item-id="{{ item.id }}" data-action="decrease">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <span class="mx-2 quantity-display">{{ item.quantity }}</span>
+                                        <button type="button" class="btn btn-outline-primary btn-sm quantity-btn" 
+                                                data-item-id="{{ item.id }}" data-action="increase">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <span class="text-gradient fw-bold price-display">${{ item.total_price }}</span>
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="button" class="btn btn-link text-danger remove-btn" 
+                                            data-item-id="{{ item.id }}">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cart Summary -->
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm sticky-top" style="top: 20px;">
+                    <div class="card-body p-4">
+                        <h4 class="text-gradient fw-bold mb-4" data-translate="order_summary">{% trans "Order Summary" %}</h4>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="text-muted" data-translate="subtotal">{% trans "Subtotal" %}</span>
+                            <span class="text-gradient fw-bold">${{ cart_total }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="text-muted" data-translate="shipping">{% trans "Shipping" %}</span>
+                            <span class="text-gradient fw-bold">$0.00</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between mb-4">
+                            <span class="fw-bold" data-translate="total">{% trans "Total" %}</span>
+                            <span class="text-gradient fw-bold h4 mb-0">${{ cart_total }}</span>
+                        </div>
+                        <button type="button" class="btn btn-primary w-100 hover-up checkout-btn" data-translate="checkout">
+                            <i class="fas fa-lock me-2"></i>{% trans "Proceed to Checkout" %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <div class="empty-cart-animation mb-4">
+                <i class="fas fa-shopping-cart fa-4x text-muted"></i>
+                <div class="empty-cart-wave"></div>
+            </div>
+            <h3 class="text-gradient mb-3" data-translate="cart_empty">{% trans "Your cart is empty" %}</h3>
+            <p class="text-muted mb-4" data-translate="cart_empty_message">
+                {% trans "Looks like you haven't added any items to your cart yet." %}
+            </p>
+            <a href="{% url 'shop:product_list' %}" class="btn btn-primary btn-lg hover-up" data-translate="start_shopping">
+                <i class="fas fa-store me-2"></i>{% trans "Start Shopping" %}
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .bg-gradient-light {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(230, 243, 255, 0.95) 100%);
+    }
+
+    .circuit-pattern {
+        background: url('{% static "images/background/circuit_pattern.jpg" %}') center/cover;
+        opacity: 0.15;
+        filter: brightness(1.2) contrast(1.1);
+    }
+
+    .cart-header {
+        padding: 3rem 0;
+    }
+
+    .text-gradient {
+        background: linear-gradient(135deg, #004d99 0%, #0066cc 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .hover-up {
+        transition: all 0.3s ease;
+    }
+
+    .hover-up:hover {
+        transform: translateY(-5px);
+    }
+
+    .cart-item {
+        transition: all 0.3s ease;
+    }
+
+    .cart-item:hover {
+        transform: translateY(-5px);
+    }
+
+    .product-image {
+        transition: all 0.3s ease;
+        border: 1px solid rgba(0, 102, 204, 0.1);
+    }
+
+    .cart-item:hover .product-image {
+        transform: scale(1.05);
+    }
+
+    .quantity-control {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 102, 204, 0.05);
+        padding: 0.5rem;
+        border-radius: 50px;
+    }
+
+    .quantity-btn {
+        width: 30px;
+        height: 30px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+    }
+
+    .quantity-btn:hover {
+        transform: scale(1.1);
+    }
+
+    .quantity-display {
+        min-width: 30px;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #0066cc 0%, #004d99 100%);
+        border: none;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-primary::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%);
+        transition: transform 0.3s ease;
+        transform: translateX(-100%);
+    }
+
+    .btn-primary:hover::after {
+        transform: translateX(100%);
+    }
+
+    .empty-cart-animation {
+        position: relative;
+        display: inline-block;
+    }
+
+    .empty-cart-wave {
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 60px;
+        background: radial-gradient(circle, rgba(0,102,204,0.1) 0%, rgba(255,255,255,0) 70%);
+        border-radius: 50%;
+        animation: wave 2s infinite;
+    }
+
+    @keyframes wave {
+        0% {
+            transform: translateX(-50%) scale(1);
+            opacity: 1;
+        }
+        100% {
+            transform: translateX(-50%) scale(2);
+            opacity: 0;
+        }
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Quantity buttons
+    document.querySelectorAll('.quantity-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const itemId = this.dataset.itemId;
+            const action = this.dataset.action;
+            updateQuantity(itemId, action);
+        });
+    });
+
+    // Remove buttons
+    document.querySelectorAll('.remove-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const itemId = this.dataset.itemId;
+            removeItem(itemId);
+        });
+    });
+
+    // Quantity update function
+    function updateQuantity(itemId, action) {
+        fetch(`/shop/update_cart/${itemId}/${action}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            }
+        });
+    }
+
+    // Remove item function
+    function removeItem(itemId) {
+        if (confirm('Are you sure you want to remove this item?')) {
+            fetch(`/shop/remove_from_cart/${itemId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                }
+            });
+        }
+    }
+
+    // Get CSRF token
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+});
+</script>
+{% endblock %} 

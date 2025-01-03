@@ -1,0 +1,34 @@
+{% extends 'ecom/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Mes Réclamations</h2>
+    <a href="{% url 'reclamation_create' %}" class="btn btn-primary mb-3">
+        Nouvelle réclamation
+    </a>
+    
+    {% if reclamations %}
+        <div class="list-group">
+            {% for reclamation in reclamations %}
+                <div class="list-group-item">
+                    <h5>{{ reclamation.subject }}</h5>
+                    <p>{{ reclamation.description }}</p>
+                    <small class="text-muted">
+                        Status: {{ reclamation.get_status_display }} | 
+                        Créé le: {{ reclamation.created_at|date:"d/m/Y" }}
+                    </small>
+                    {% if reclamation.response %}
+                        <div class="mt-2 p-2 bg-light">
+                            <strong>Réponse:</strong>
+                            <p>{{ reclamation.response }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Vous n'avez pas encore de réclamations.</p>
+    {% endif %}
+</div>
+{% endblock %} 

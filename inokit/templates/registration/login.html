@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h2 class="text-center mb-4" data-translate="login">{% trans "Login" %}</h2>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="id_username" class="form-label" data-translate="username">{% trans "Username" %}</label>
+                            {{ form.username|add_class:"form-control" }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="id_password" class="form-label" data-translate="password">{% trans "Password" %}</label>
+                            {{ form.password|add_class:"form-control" }}
+                        </div>
+                        
+                        {% if form.errors %}
+                        <div class="alert alert-danger" data-translate="login_error">
+                            {% trans "Please enter a correct username and password. Note that both fields may be case-sensitive." %}
+                        </div>
+                        {% endif %}
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary" data-translate="login_button">{% trans "Login" %}</button>
+                        </div>
+                        
+                        <input type="hidden" name="next" value="{{ next }}">
+                    </form>
+                    
+                    <div class="text-center mt-3">
+                        <p data-translate="no_account">{% trans "Don't have an account?" %} <a href="{% url 'core:register' %}" data-translate="register_now">{% trans "Register now" %}</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

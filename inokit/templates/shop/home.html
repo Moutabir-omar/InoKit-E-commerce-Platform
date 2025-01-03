@@ -1,0 +1,233 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section position-relative overflow-hidden">
+    <div class="circuit-pattern position-absolute w-100 h-100"></div>
+    <div class="container position-relative" style="z-index: 2;">
+        <div class="hero-content text-dark py-5">
+            <h1 class="display-4 mb-4 fw-bold">
+                <span data-translate="welcome" class="text-gradient">Welcome to</span> 
+                <span class="text-primary">InoKit</span>
+            </h1>
+            <p class="lead mb-4 text-dark" data-translate="hero_description">Your premier destination for electronic components, development boards, and maker supplies.</p>
+            <div class="d-flex gap-3">
+                <a href="{% url 'shop:product_list' %}" class="btn btn-primary btn-lg shadow-lg hover-up" data-translate="explore_products">
+                    Explore Products
+                </a>
+                <a href="#categories" class="btn btn-outline-primary btn-lg hover-up" data-translate="view_categories">
+                    View Categories
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(230, 243, 255, 0.95) 100%);
+        position: relative;
+        overflow: hidden;
+        min-height: 500px;
+        display: flex;
+        align-items: center;
+    }
+
+    .circuit-pattern {
+        background: url('{% static "images/background/circuit_pattern.jpg" %}') center/cover;
+        opacity: 0.15;
+        filter: brightness(1.2) contrast(1.1);
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at top right, rgba(0, 102, 204, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+        z-index: 1;
+    }
+
+    .text-gradient {
+        background: linear-gradient(135deg, #004d99 0%, #0066cc 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .hover-up {
+        transition: all 0.3s ease;
+    }
+
+    .hover-up:hover {
+        transform: translateY(-5px);
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #0066cc 0%, #004d99 100%);
+        border: none;
+    }
+
+    .btn-outline-primary {
+        border-color: #0066cc;
+        color: #0066cc;
+    }
+
+    .btn-outline-primary:hover {
+        background: linear-gradient(135deg, #0066cc 0%, #004d99 100%);
+        border-color: transparent;
+    }
+</style>
+
+<!-- Categories Section -->
+<section id="categories" class="py-5 bg-gradient-light">
+    <div class="container">
+        <h2 class="text-center mb-5 position-relative">
+            <span class="text-gradient fw-bold" data-translate="product_categories">Product Categories</span>
+        </h2>
+        <div class="row g-4">
+            <!-- Development Boards -->
+            <div class="col-md-4">
+                <div class="category-card hover-up">
+                    <div class="category-icon">
+                        <i class="fas fa-microchip"></i>
+                    </div>
+                    <h3 class="text-primary" data-translate="dev_boards">Development Boards</h3>
+                    <p class="text-muted" data-translate="dev_boards_desc">Arduino, Raspberry Pi, and more</p>
+                </div>
+            </div>
+            
+            <!-- Electronic Components -->
+            <div class="col-md-4">
+                <div class="category-card hover-up">
+                    <div class="category-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 class="text-primary" data-translate="components">Electronic Components</h3>
+                    <p class="text-muted" data-translate="components_desc">Resistors, capacitors, ICs</p>
+                </div>
+            </div>
+            
+            <!-- Tools & Equipment -->
+            <div class="col-md-4">
+                <div class="category-card hover-up">
+                    <div class="category-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h3 class="text-primary" data-translate="tools">Tools & Equipment</h3>
+                    <p class="text-muted" data-translate="tools_desc">Soldering irons, multimeters</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products -->
+<section class="py-5 bg-white">
+    <div class="container">
+        <h2 class="text-center mb-5 position-relative">
+            <span class="text-gradient fw-bold" data-translate="featured_products">Featured Products</span>
+        </h2>
+        <div class="row g-4">
+            {% for product in products %}
+            <div class="col-md-4">
+                <div class="product-card hover-up">
+                    <div class="product-image-wrapper">
+                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                        <div class="product-overlay"></div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">{{ product.name }}</h5>
+                        <p class="card-text text-muted">{{ product.description|truncatewords:20 }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="product-price fw-bold text-gradient">{{ product.price }} DH</span>
+                            <a href="{% url 'shop:add_to_cart' product.id %}" class="btn btn-primary btn-sm hover-scale">
+                                <i class="fas fa-cart-plus me-1"></i>
+                                <span data-translate="add_to_cart">Add to Cart</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5" data-translate="why_choose">Why Choose InoKit?</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="text-center">
+                    <i class="fas fa-shipping-fast fa-3x mb-3 text-primary"></i>
+                    <h4 data-translate="fast_shipping">Fast Shipping</h4>
+                    <p data-translate="shipping_desc">Quick delivery to your doorstep</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center">
+                    <i class="fas fa-check-circle fa-3x mb-3 text-primary"></i>
+                    <h4 data-translate="quality_products">Quality Products</h4>
+                    <p data-translate="quality_desc">Genuine components & tools</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center">
+                    <i class="fas fa-headset fa-3x mb-3 text-primary"></i>
+                    <h4 data-translate="expert_support">Expert Support</h4>
+                    <p data-translate="support_desc">Technical assistance available</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Dark Mode Toggle -->
+<button class="theme-toggle" onclick="toggleTheme()">
+    <i class="fas fa-moon"></i>
+</button>
+
+<script>
+    // Animation for elements when they come into view
+    function animateOnScroll() {
+        const elements = document.querySelectorAll('.product-card, .category-card');
+        elements.forEach(element => {
+            if (element.getBoundingClientRect().top < window.innerHeight) {
+                element.classList.add('animate');
+            }
+        });
+    }
+
+    // Initial check and scroll listener
+    window.addEventListener('load', animateOnScroll);
+    window.addEventListener('scroll', animateOnScroll);
+
+    // Dark mode toggle
+    function toggleTheme() {
+        const body = document.body;
+        const currentTheme = body.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        body.setAttribute('data-theme', newTheme);
+        
+        // Update toggle icon
+        const toggleIcon = document.querySelector('.theme-toggle i');
+        toggleIcon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        
+        // Save preference
+        localStorage.setItem('theme', newTheme);
+    }
+
+    // Check for saved theme preference
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.body.setAttribute('data-theme', savedTheme);
+    const toggleIcon = document.querySelector('.theme-toggle i');
+    toggleIcon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+</script>
+{% endblock %}
+

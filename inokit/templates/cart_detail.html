@@ -1,0 +1,46 @@
+{% extends 'ecom/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Votre Panier</h2>
+    {% if cart.items.all %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Produit</th>
+                    <th>Prix unitaire</th>
+                    <th>Quantité</th>
+                    <th>Total</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart.items.all %}
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.product.price }} €</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.get_cost }} €</td>
+                    <td>
+                        <a href="{% url 'remove_from_cart' item.id %}" class="btn btn-danger btn-sm">
+                            Supprimer
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3"><strong>Total</strong></td>
+                    <td><strong>{{ cart.get_total }} €</strong></td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+        <a href="{% url 'checkout' %}" class="btn btn-success">Passer la commande</a>
+    {% else %}
+        <p>Votre panier est vide.</p>
+    {% endif %}
+</div>
+{% endblock %} 

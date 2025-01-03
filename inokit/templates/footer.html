@@ -1,0 +1,121 @@
+{% load static %}
+
+<footer class="footer bg-dark text-light py-5 mt-5">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Company Information -->
+            <div class="col-12 col-md-4">
+                <h5 class="mb-3">
+                    <span style="color: #00ff9d;">Ino</span><span style="color: #fff;">Kit</span>
+                </h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <i class="fas fa-envelope me-2"></i>
+                        <a href="mailto:innokitarduino@gmail.com" class="text-light text-decoration-none">
+                            innokitarduino@gmail.com
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-phone me-2"></i>
+                        <a href="tel:0682277351" class="text-light text-decoration-none">0682 277 351</a>
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-phone me-2"></i>
+                        <a href="tel:0664990550" class="text-light text-decoration-none">0664 990 550</a>
+                    </li>
+                    <li>
+                        <i class="fas fa-map-marker-alt me-2"></i>
+                        B.P :218, Avenue de l'université, Berrechid
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Information -->
+            <div class="col-6 col-md-3">
+                <h5 class="mb-3">Information</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <a href="#" class="text-light text-decoration-none">Livraison et Retour</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="text-light text-decoration-none">Condition de vente</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="text-light text-decoration-none">Politique de confidentialité</a>
+                    </li>
+                    <li>
+                        <a href="#" class="text-light text-decoration-none">Contactez-nous</a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Magasin -->
+            <div class="col-6 col-md-2">
+                <h5 class="mb-3">Magasin</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <a href="#" class="text-light text-decoration-none">À propos</a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Autres -->
+            <div class="col-12 col-md-3">
+                <h5 class="mb-3">Autres</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <a href="{% url 'ecom:home' %}" class="text-light text-decoration-none">Home</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="{% url 'ecom:product_list' %}" class="text-light text-decoration-none">Products</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="{% url 'ecom:cart_detail' %}" class="text-light text-decoration-none">Cart</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="text-light text-decoration-none">Mon compte</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="text-light text-decoration-none">Nouveaux produits</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="text-light text-decoration-none">Meilleures ventes</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="text-light text-decoration-none">Promotions</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="text-light text-decoration-none">Promo sur quantité</a>
+                    </li>
+                    <li>
+                        <a href="#" class="text-light text-decoration-none">Plan du site</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Delivery Information -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="border-top pt-4">
+                    <p class="text-muted small">
+                        Shopping Maroc livre partout au Maroc : Casablanca, Mohammedia, Berrechid, Bouznika, Skhirat, 
+                        Ben Slimane, Temara, Rabat, Khouribga, Kenitra, Settat, Azemmour, El Jadida, Beni Mellal, 
+                        Meknès, Safi, Marrakech.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="row mt-3">
+            <div class="col-12">
+                <div class="border-top pt-3">
+                    <p class="text-center text-muted mb-0">
+                        &copy; {% now "Y" %} InoKit. Tous droits réservés.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer> 

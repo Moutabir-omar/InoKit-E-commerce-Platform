@@ -1,0 +1,87 @@
+{% extends 'ecom/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Search and Filters -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <form class="d-flex gap-2">
+                <input type="text" name="search" class="form-control" placeholder="Search products...">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+        </div>
+        <div class="col-md-4 text-end">
+            <div class="dropdown">
+                <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    Sort by
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="?sort=price_asc">Price: Low to High</a></li>
+                    <li><a class="dropdown-item" href="?sort=price_desc">Price: High to Low</a></li>
+                    <li><a class="dropdown-item" href="?sort=name">Name</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Products Grid -->
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                {% if product.product_image %}
+                    <img src="{{ product.product_image.url }}" class="card-img-top" alt="{{ product.name }}"
+                         style="height: 200px; object-fit: contain; padding: 1rem;">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">{{ product.description|truncatewords:20 }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="h5">{{ product.price }} €</span>
+                        {% if product.stock > 0 %}
+                            <a href="{% url 'ecom:add-to-cart' product.id %}" class="btn btn-sm btn-primary">
+                                Add to Cart
+                            </a>
+                        {% else %}
+                            <span class="badge bg-danger">Out of Stock</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                No products found. Please try different search criteria.
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %} 

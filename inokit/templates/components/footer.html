@@ -1,0 +1,130 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+  <style>
+    /*---------------------------------------
+   Social section
+-----------------------------------------*/
+    footer {
+      padding: 0px 0px 0px 0px;
+      background-color: black;
+      margin: 0px;
+  
+    }
+
+    .fa {
+      padding: 20px;
+      font-size: 23px;
+      width: 60px;
+      text-align: center;
+      text-decoration: none;
+      margin: 5px 2px;
+      border-radius: 50%;
+    }
+
+    .fa:hover {
+      opacity: 0.5;
+      text-decoration: none;
+    }
+
+    .fa-facebook {
+      background: #3B5998;
+      color: white;
+      margin-top: 30px;
+    }
+
+    .fa-whatsapp {
+      background: #25d366;
+      color: white;
+    }
+
+    .fa-twitter {
+      background: #55ACEE;
+      color: white;
+    }
+
+    .fa-instagram {
+      background: #125688;
+      color: white;
+    }
+
+    p {
+      text-align: center;
+
+    }
+  </style>
+</head>
+
+<footer class="footer mt-5 py-5 bg-dark text-light">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-12 col-md-4">
+                <h5 class="mb-3">About TechStore</h5>
+                <p class="text-muted">Your one-stop shop for electronic components, development boards, and maker supplies.</p>
+                <div class="social-links">
+                    <a href="#" class="text-light me-3"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-light me-3"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-light me-3"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-light"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            
+            <div class="col-6 col-md-2">
+                <h5 class="mb-3">Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="{% url 'customer-home' %}" class="text-muted">Home</a></li>
+                    <li><a href="{% url 'aboutus' %}" class="text-muted">About Us</a></li>
+                    <li><a href="{% url 'contactus' %}" class="text-muted">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="col-6 col-md-3">
+                <h5 class="mb-3">Categories</h5>
+                <ul class="list-unstyled">
+                    <li><a href="?category=Development Boards" class="text-muted">Development Boards</a></li>
+                    <li><a href="?category=Sensors" class="text-muted">Sensors</a></li>
+                    <li><a href="?category=Tools" class="text-muted">Tools</a></li>
+                    <li><a href="?category=Project Kits" class="text-muted">Project Kits</a></li>
+                </ul>
+            </div>
+            
+            <div class="col-12 col-md-3">
+                <h5 class="mb-3">Newsletter</h5>
+                <p class="text-muted">Subscribe for updates and offers</p>
+                <form class="mb-3">
+                    <div class="input-group">
+                        <input type="email" class="form-control" placeholder="Your email">
+                        <button class="btn btn-primary" type="submit">Subscribe</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <hr class="my-4">
+        
+        <div class="row align-items-center">
+            <div class="col-md-6 text-center text-md-start">
+                <p class="mb-0 text-muted">&copy; 2024 TechStore. All rights reserved.</p>
+            </div>
+            <div class="col-md-6 text-center text-md-end">
+                <img src="{% static 'images/payment-methods.png' %}" alt="Payment Methods" 
+                     style="height: 30px;">
+            </div>
+        </div>
+    </div>
+</footer>
+<!--
+developed By : sumit kumar
+facebook : fb.com/sumit.luv
+youtube : youtube.com/lazycoders
+-->
+
+</html>

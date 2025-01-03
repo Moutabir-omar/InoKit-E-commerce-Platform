@@ -1,0 +1,61 @@
+{% extends 'ecom/admin_base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-gradient" style="background: linear-gradient(to right, #00ff9d, #2c3e50)">
+            <h3 class="text-white mb-0">Liste des Clients</h3>
+        </div>
+        
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Photo</th>
+                            <th>Téléphone</th>
+                            <th>Adresse</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for customer in customers %}
+                        <tr>
+                            <td>{{ customer.get_name }}</td>
+                            <td>
+                                {% if customer.profile_pic %}
+                                    <img src="{{ customer.profile_pic.url }}" alt="Profile" 
+                                         class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                                {% else %}
+                                    <i class="fas fa-user-circle" style="font-size: 40px; color: #ccc;"></i>
+                                {% endif %}
+                            </td>
+                            <td>{{ customer.mobile }}</td>
+                            <td>{{ customer.address }}</td>
+                            <td>
+                                <a href="{% url 'update-customer' customer.id %}" class="btn btn-sm btn-primary me-2">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'delete-customer' customer.id %}" class="btn btn-sm btn-danger"
+                                   onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce client?')">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center py-4">
+                                <i class="fas fa-users mb-3" style="font-size: 3rem; color: #ccc;"></i>
+                                <h4>Aucun client enregistré</h4>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
